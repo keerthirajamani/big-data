@@ -16,7 +16,6 @@ public class delete {
 				System.out.println(obj1);
 				System.out.println("");
 				System.out.println("Clearing arraylist");
-				obj1.
 				obj1.clear();		
 				int del = obj1.size();
 				System.out.println(del);
