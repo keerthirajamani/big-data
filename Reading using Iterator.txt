@@ -3,7 +3,6 @@ package Arraydemo;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-			//This program is to convert ArrayList to Array
 public class Singledemo {
 
 	public static void main(String[] args) {
