@@ -1,0 +1,27 @@
+package dd;
+
+
+import java.util.Scanner;
+
+public class arrli {
+	 public static void main(String args[])
+     {
+         Scanner sca=new Scanner(System.in);
+         
+         System.out.println("Enter a binary number:");
+         long n=sca.nextLong();
+         
+         long decimal=0,k=0,i;
+         
+         while(n!=0)
+         {
+        	 i=(n%10);
+             decimal+=(i*Math.pow(2,k));
+             n=n/10;
+             k++;
+         }
+         
+         System.out.println(decimal);
+         sca.close();
+     }
+}
