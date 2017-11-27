@@ -9,12 +9,12 @@ public class decihexa {
 		int n=scan.nextInt();
 		while(n>0){
 			b=n%16;
-			if(b==10){c='A';c1++;}
-			else if(b==11){b='B';c2++;}
-			else if(b==12){b='C';c3++;}
-			else if(b==13){b='D';c4++;}
-			else if(b==14){b='E';c5++;}
-			else if(b==15){b='F';c6++;}
+			if(b==10){c='A';g=g+c;c1++;}
+			else if(b==11){c='B';g=g+c;c2++;}
+			else if(b==12){c='C';g=g+c;c3++;}
+			else if(b==13){c='D';g=g+c;c4++;}
+			else if(b==14){c='E';g=g+c;c5++;}
+			else if(b==15){c='F';g=g+c;c6++;}
 			else {g=g+b;}
 			n=n/16;
 		}
