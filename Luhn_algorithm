@@ -1,0 +1,27 @@
+import java.util.Scanner;
+public class luhn_algo {
+public static void main(String[] args){
+	String s1,s2="",s3="";
+	int x1=0,x2=0,c=0;
+	Scanner sca = new Scanner(System.in);
+	System.out.println("Enter the 16 digit without space");
+	s1 = sca.next();
+	//s1="4012888888881881";
+	System.out.println(s1.length());
+	for(int i=0;i<s1.length();i++){
+		if(i%2==0){
+			int g=((s1.charAt(i)-48)*2)%9;
+			//System.out.println(g);
+			s2=s2+g;
+			}
+		else{
+			int g=s1.charAt(i)-48;
+			s3=s3+g;
+			}
+		
+	}for(int i=0;i<s2.length();i++){
+		x1=x1+s2.charAt(i)-48;
+		x2=x2+s3.charAt(i)-48;
+	}System.out.println(x1+x2);
+	}
+}
