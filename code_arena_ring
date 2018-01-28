@@ -1,0 +1,59 @@
+package zoho;
+import java.util.ArrayList;
+import java.util.Scanner;
+public class ring {
+		  public static void main(String[] args){
+	      Scanner sca = new Scanner(System.in);
+	      System.out.println("enter the total");
+	      int n=sca.nextInt();
+	      System.out.println("enter red input");
+	      int r=sca.nextInt();
+	      System.out.println("enter green input");
+	      int g=sca.nextInt();
+	      System.out.println("enter blue input");
+	      int b=sca.nextInt();int z=n;
+	      ArrayList<Integer> reda = new ArrayList<Integer>();
+	      ArrayList<Integer> greea = new ArrayList<Integer>();
+	      ArrayList<Integer> blua = new ArrayList<Integer>();
+	      if(r==0){for(int j=0;j<n;j++){reda.add(0);}}
+	      if(g==0){for(int j=0;j<n;j++){greea.add(0);}}
+	      if(b==0){for(int j=0;j<n;j++){blua.add(0);}}
+			 for(int i=1;i<=n;i++){
+		    	 if(i%(r+1)==0){
+		    		 for(int j=0;j<r;j++){
+		    		 reda.add(1);}
+		    	 }else{reda.add(0);}
+		     }while(reda.size()>z){reda.remove(z);}System.out.println(reda);
+		     for(int i=1;i<=n;i++){
+		    	 if(i%(g+1)==0){
+		    		 for(int j=0;j<g;j++){greea.add(2);}
+		    	 }else{greea.add(0);}
+		     }
+		     while(greea.size()>z){greea.remove(z);}System.out.println(greea);
+				for(int i=1;i<=n;i++){
+				 if(i%(b+1)==0){
+			   		 for(int j=0;j<b;j++){blua.add(4);}
+			   	 }else{blua.add(0);}
+			    }
+			    while(blua.size()>z){blua.remove(z);}System.out.println(blua);
+			    ArrayList<Integer> fina = new ArrayList<Integer>();
+	  	for(int i=0;i<n;i++){int sum=0;
+	  	sum=reda.get(i)+greea.get(i)+blua.get(i);
+	  	fina.add(sum);
+	  	}System.out.println("Final"+fina);//12
+	  	int blai=0,redi=0,grei=0,blui=0,yelli=0,cyai=0,magi=0,whii=0;
+	  	for(int i=0;i<fina.size();i++){
+	  		if(fina.get(i).equals(0)){blai=blai+1;}
+	  		if(fina.get(i).equals(1)){redi=redi+1;}
+	  		if(fina.get(i).equals(2)){grei=grei+1;}
+	  		if(fina.get(i).equals(3)){yelli=yelli+1;}
+	  		if(fina.get(i).equals(4)){blui=blui+1;}
+	  		if(fina.get(i).equals(5)){magi=magi+1;}
+	  		if(fina.get(i).equals(6)){cyai=cyai+1;}
+	  		if(fina.get(i).equals(7)){whii=whii+1;}
+	  		
+	  	}System.out.println(" Black "+blai);System.out.println(" Red "+redi);System.out.println(" Green "+grei);
+	  	System.out.println(" Blue "+blui);System.out.println(" Yellow "+yelli);System.out.println(" Cyan "+cyai);
+	  	System.out.println(" Mgenta "+magi);System.out.println(" White "+whii);
+	}
+}
