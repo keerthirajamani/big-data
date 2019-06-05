@@ -1,0 +1,98 @@
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class fragma_2 {
+
+	public static class rating extends
+			Mapper<LongWritable, Text, Text, Text> {
+		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+			String[] record = value.toString().split(",");
+			String movieid=record[1];
+			String rating=record[2];
+			context.write(new Text(movieid), new Text("rating," + rating));
+		}
+	}
+
+	public static class movie extends
+			Mapper<LongWritable, Text, Text, Text> {
+		public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+			String[] record = value.toString().split(",");
+			String movieid=record[0];
+			String title=record[1];
+			context.write(new Text(movieid), new Text("movie," + title));
+		}
+	}
+
+	public static class ReduceJoin extends
+			Reducer<Text, Text, Text, NullWritable> {
+		NullWritable nw = NullWritable.get();
+		TreeMap<IntWritable,String> sam=new TreeMap<IntWritable,String>(Collections.reverseOrder());
+		public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+			String name = "";
+			int total = 0;
+			int count = 0;
+			IntWritable i1=new IntWritable();
+			for (Text t : values) {
+				String parts[] = t.toString().split(",");
+				if (parts[0].equals("rating")) {
+					int rat=Integer.parseInt(parts[1]);
+					count++;
+					total +=rat;
+				} else if (parts[0].equals("movie")) {
+					name = parts[1];
+				}
+			}
+			//context.write(new Text(key), new Text(total+","+name));
+			if(count>40){
+				i1=new IntWritable(total);
+			 sam.put(i1,name);
+			}
+		}
+		 protected void cleanup(Context context) throws IOException,InterruptedException
+         {
+           
+			 while(sam.size()>20){
+					sam.remove(sam.lastKey());
+				}
+				for(Map.Entry m:sam.entrySet()){
+					 //System.out.println(m.getKey()+" "+m.getValue()); 
+					 String v1=m.getValue()+","+m.getKey();
+					 context.write(new Text(v1),nw);
+				}
+         }
+	}
+
+	public static void main(String[] args) throws Exception {
+		Configuration conf = new Configuration();
+		Job job = Job.getInstance(conf);
+	    job.setJarByClass(fragma_2.class);
+	    job.setJobName("Fragma_2");
+		job.setReducerClass(ReduceJoin.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(NullWritable.class);
+		//job.setNumReduceTasks(0);
+		MultipleInputs.addInputPath(job, new Path(args[0]),TextInputFormat.class, rating.class);
+		MultipleInputs.addInputPath(job, new Path(args[1]),TextInputFormat.class, movie.class);
+		/*Path outputPath = new Path(args[2]);
+		FileOutputFormat.setOutputPath(job, outputPath);
+		outputPath.getFileSystem(conf).delete(outputPath,true);*/
+		System.exit(job.waitForCompletion(true) ? 0 : 1);
+	}
+}
