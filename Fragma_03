@@ -1,0 +1,128 @@
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.NullWritable;
+//import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+//import org.apache.hadoop.mapreduce.Reducer.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+	public class fragma_3 {
+		
+		public static class mapclass extends Mapper<LongWritable,Text,Text,Text>
+		{
+			public void map(LongWritable key,Text val,Context context) throws IOException, InterruptedException
+			{
+				try{
+				String[] record=val.toString().toUpperCase().split(",");
+				String age=record[2];
+				String occupation=record[3];
+				String rating=record[6];
+				String genre=record[9];
+				String keyye = age+","+occupation;
+				String values = rating+","+genre;
+				context.write(new Text(keyye),new Text(values));
+				}
+				catch(Exception e)
+				{
+					System.out.println(e);
+				}
+			}
+		}
+		
+		public static class reduceclass extends Reducer<Text,Text,Text,NullWritable>
+		{
+			NullWritable nw = NullWritable.get();
+			private long i1=0;private long i2=0;private long i3=0;private long i4=0;private long i5=0;
+			private long i6=0;private long i7=0;
+			private long i8=0;private long i9=0;private long i10=0;private long i11=0;private long i12=0;private long i13=0;private long i14=0;
+			private long i15=0;private long i16=0;private long i17=0;private long i18=0;
+			public void reduce(Text key,Iterable<Text> val,Context context) throws IOException, InterruptedException
+			{
+				TreeMap<Long,String> sam=new TreeMap<Long,String>(Collections.reverseOrder());
+				for(Text va:val){
+					String[] vi=va.toString().split(",");int vi1=Integer.parseInt(vi[0]);
+					String vi2=vi[1];
+					if(vi2.contains("ACTION")){i1+=vi1;}
+					if(vi2.contains("ADVENTURE")){i2+=vi1;}
+					if(vi2.contains("ANIMATION")){i3+=vi1;}
+					if(vi2.contains("Children's")){i4+=vi1;}
+					if(vi2.contains("COMEDY")){i5+=vi1;}
+					if(vi2.contains("CRIME")){i6+=vi1;}
+					if(vi2.contains("DOCUMENTARY")){i7+=vi1;}
+					if(vi2.contains("DRAMA")){i8+=vi1;}
+					if(vi2.contains("FANTASY")){i9+=vi1;}
+					if(vi2.contains("FILM-NOIR")){i10+=vi1;}
+					if(vi2.contains("HORROR")){i11+=vi1;}
+					if(vi2.contains("MUSICAL")){i12+=vi1;}
+					if(vi2.contains("MYSTERY")){i13+=vi1;}
+					if(vi2.contains("ROMANCE")){i14+=vi1;}
+					if(vi2.contains("SCI-FI")){i15+=vi1;}
+					if(vi2.contains("THRILLER")){i16+=vi1;}
+					if(vi2.contains("WAR")){i17+=vi1;}
+					if(vi2.contains("WESTERN")){i18+=vi1;}
+					
+				}
+					sam.put(i1,"Action");
+					sam.put(i2,"Adventure");
+					sam.put(i3,"Animation");
+					sam.put(i4,"Children's");
+					sam.put(i5,"Comedy");
+					sam.put(i6,"Crime");
+					sam.put(i7,"Documentary");
+					sam.put(i8,"Drama");
+					sam.put(i9,"Fantasy");
+					sam.put(i10,"Film-Noir");
+					sam.put(i11,"Horror");
+					sam.put(i12,"Musical");
+					sam.put(i13,"Mystery");
+					sam.put(i14,"Romance");
+					sam.put(i15,"Sci-Fi");
+					sam.put(i16,"Thriller");
+					sam.put(i17,"War");
+					sam.put(i18,"Western");
+					while(sam.size()>5){
+						sam.remove(sam.lastKey());
+					}
+					for(Map.Entry m:sam.entrySet()){
+						 //System.out.println(m.getKey()+" "+m.getValue()); 
+						 String v1=key+","+m.getKey()+","+m.getValue();
+						 context.write(new Text(v1),nw);
+					}
+				//context.write(key,new Text(ti));
+				
+			}
+				
+		}
+		
+		public static void main(String[] args) throws Exception
+		{
+			Configuration conf=new Configuration();
+		    Job job = Job.getInstance(conf, "Shuffle and sort");
+		    job.setJarByClass(fragma_3.class);
+		    job.setMapperClass(mapclass.class);
+		    job.setReducerClass(reduceclass.class);
+		    job.setNumReduceTasks(4);
+		    job.setMapOutputKeyClass(Text.class);
+		    job.setMapOutputValueClass(Text.class);
+		  // job.setCombinerClass(reduceclass.class);
+		  //  job.setPartitionerClass(part.class);
+		    job.setOutputKeyClass(Text.class);
+		    job.setOutputValueClass(NullWritable.class);
+		    FileInputFormat.addInputPath(job, new Path(args[0]));
+		    FileOutputFormat.setOutputPath(job, new Path(args[1]));
+		    /*Path outputPath = new Path(args[1]);
+			FileOutputFormat.setOutputPath(job, outputPath);
+			outputPath.getFileSystem(conf).delete(outputPath,true);*/
+		    System.exit(job.waitForCompletion(true) ? 0 : 1);
+
+		}
+	}
